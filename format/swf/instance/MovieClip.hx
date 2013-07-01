@@ -61,6 +61,8 @@ class MovieClip extends flash.display.MovieClip {
 		//__totalFrames = data.frames.length;
 		__totalFrames = data.frames.length;
 		
+		//trace("frames: " + __totalFrames);
+		
 		update ();
 		
 		if (__totalFrames > 1) {
@@ -263,6 +265,11 @@ class MovieClip extends flash.display.MovieClip {
 	
 	
 	private function enterFrame ():Void {
+		
+		trace(name);
+		if (this.name == "locoCuad") {
+			trace(name);
+		}
 		
 		if (lastUpdate == __currentFrame) {
 			
@@ -691,6 +698,10 @@ class MovieClip extends flash.display.MovieClip {
 	
 	
 	private function update ():Void {
+		
+		if (this.name == "locoCuad") {
+			trace(name);
+		}
 		
 		if (__currentFrame != lastUpdate) {
 			
