@@ -34,6 +34,8 @@ class MovieClip extends flash.display.MovieClip {
 	private var lastUpdate:Int;
 	private var playing:Bool;
 	
+	private var activeObjects:Map<Int, DisplayObject>;
+	
 	#if flash
 	private var __currentFrame:Int;
 	private var __totalFrames:Int;
@@ -60,6 +62,8 @@ class MovieClip extends flash.display.MovieClip {
 		__currentFrame = 1;
 		//__totalFrames = data.frames.length;
 		__totalFrames = data.frames.length;
+		
+		activeObjects = new Map();
 		
 		//trace("frames: " + __totalFrames);
 		
@@ -478,43 +482,59 @@ class MovieClip extends flash.display.MovieClip {
 		
 		for (object in frame.objects) {
 			
-			var symbol = data.getCharacter (object.characterId);
 			var displayObject:DisplayObject = null;
-			
-			if (Std.is (symbol, TagDefineSprite)) {
+			if (!activeObjects.exists(object.characterId)) {	
+				var symbol = data.getCharacter (object.characterId);
 				
-				displayObject = new MovieClip (cast symbol);
-				
-			} else if (Std.is (symbol, TagDefineBitsLossless)) {
-				
-				trace ("png");
-				//displayObject = createBitmap (cast symbol);
-				
-			} else if (Std.is (symbol, TagDefineBits)) {
-				
-				trace ("jpg");
-				
-			} else if (Std.is (symbol, TagDefineShape)) {
-				
-				displayObject = createShape (cast symbol);
-				
-			} else if (Std.is (symbol, TagDefineText)) {
-				
-				displayObject = createStaticText (cast symbol);
-				
-			} else if (Std.is (symbol, TagDefineEditText)) {
-				
-				displayObject = createDynamicText (cast symbol);
-				
+				if (Std.is (symbol, TagDefineSprite)) {
+					
+					displayObject = new MovieClip (cast symbol);
+					
+				} else if (Std.is (symbol, TagDefineBitsLossless)) {
+					
+					trace ("png");
+					//displayObject = createBitmap (cast symbol);
+					
+				} else if (Std.is (symbol, TagDefineBits)) {
+					
+					trace ("jpg");
+					
+				} else if (Std.is (symbol, TagDefineShape)) {
+					
+					displayObject = createShape (cast symbol);
+					
+				} else if (Std.is (symbol, TagDefineText)) {
+					
+					displayObject = createStaticText (cast symbol);
+					
+				} else if (Std.is (symbol, TagDefineEditText)) {
+					
+					displayObject = createDynamicText (cast symbol);
+					
+				}
 			}
+			
+			
 			
 			if (displayObject != null) {
 				
 				placeObject (displayObject, object);
 				addChild (displayObject);
+				activeObjects.set(object.characterId, displayObject);
 				
 			}
 			
+		}
+		
+		var removeCandidate:DisplayObject;
+		for (i in activeObjects.keys()) {
+			removeCandidate = activeObjects.get(i);
+			if (!contains(removeCandidate)) {
+				if (Std.is(removeCandidate, MovieClip)) {
+					untyped removeCandidate.stop ();
+				}
+				activeObjects.remove(i);
+			}
 		}
 		
 			/*for (element in frame.elements) {
@@ -705,7 +725,7 @@ class MovieClip extends flash.display.MovieClip {
 		
 		if (__currentFrame != lastUpdate) {
 			
-			for (i in 0...numChildren) {
+			/*for (i in 0...numChildren) {
 				
 				var child = getChildAt (0);
 				
@@ -718,6 +738,7 @@ class MovieClip extends flash.display.MovieClip {
 				removeChildAt (0);
 				
 			}
+			*/
 			
 			//var frameIndex = -1;
 			//
