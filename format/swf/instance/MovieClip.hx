@@ -479,7 +479,7 @@ class MovieClip extends flash.display.MovieClip {
 		var frame = data.frames[index];
 		
 		//if (frame.frameNumber == currentFrame - 1 || frame.tweenType == null || frame.tweenType == "") {
-		
+		trace(activeObjects.keys());
 		for (object in frame.objects) {
 			
 			var displayObject:DisplayObject = null;
@@ -512,17 +512,24 @@ class MovieClip extends flash.display.MovieClip {
 					displayObject = createDynamicText (cast symbol);
 					
 				}
-			}
-			
-			
-			
-			if (displayObject != null) {
 				
+				if (displayObject != null) {
+					
+					placeObject (displayObject, object);
+					addChild (displayObject);
+					activeObjects.set(object.characterId, displayObject);
+					
+				}
+				
+			} else {
+				displayObject = activeObjects.get(object.characterId);
 				placeObject (displayObject, object);
 				addChild (displayObject);
-				activeObjects.set(object.characterId, displayObject);
-				
 			}
+			
+			
+			
+			
 			
 		}
 		
@@ -725,20 +732,20 @@ class MovieClip extends flash.display.MovieClip {
 		
 		if (__currentFrame != lastUpdate) {
 			
-			/*for (i in 0...numChildren) {
+			for (i in 0...numChildren) {
 				
 				var child = getChildAt (0);
 				
-				if (Std.is (child, MovieClip)) {
-					
-					untyped child.stop ();
-					
-				}
+				//if (Std.is (child, MovieClip)) {
+					//
+					//untyped child.stop ();
+					//
+				//}
 				
 				removeChildAt (0);
 				
 			}
-			*/
+			
 			
 			//var frameIndex = -1;
 			//
