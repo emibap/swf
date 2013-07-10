@@ -5,7 +5,7 @@ import format.swf.data.SWFButtonCondAction;
 import format.swf.data.SWFButtonRecord;
 import format.swf.utils.StringUtils;
 
-class TagDefineButton2 implements IDefinitionTag
+class TagDefineButton2 extends SWFTimelineContainer #if !haxe3 , #end implements IDefinitionTag
 {
 	public static inline var TYPE:Int = 34;
 	
@@ -18,19 +18,20 @@ class TagDefineButton2 implements IDefinitionTag
 	
 	public var characterId:Int;
 
-	public var characters (default, null):Array<SWFButtonRecord>;
+	public var characters (default, null):Array<SWFButtonRecord>;	
 	public var condActions (default, null):Array<SWFButtonCondAction>;
 	
-	private var frames:Hash<Array<SWFButtonRecord>>;
+	private var buttonFrames:Hash<Array<SWFButtonRecord>>;
 	
 	public function new() {
+		super();
 		type = TYPE;
 		name = "DefineButton2";
 		version = 3;
 		level = 2;
 		characters = new Array<SWFButtonRecord>();
 		condActions = new Array<SWFButtonCondAction>();
-		frames = new Hash<Array<SWFButtonRecord>>();
+		buttonFrames = new Hash<Array<SWFButtonRecord>>();
 	}
 	
 	public function parse(data:SWFData, length:Int, version:Int, async:Bool = false):Void {
@@ -91,7 +92,7 @@ class TagDefineButton2 implements IDefinitionTag
 	}
 	
 	public function getRecordsByState(state:String):Array<SWFButtonRecord> {
-		return frames.get (state);
+		return buttonFrames.get (state);
 	}
 
 	private function processRecords():Void {
@@ -110,10 +111,10 @@ class TagDefineButton2 implements IDefinitionTag
 		overState.sort(sortByDepthCompareFunction);
 		downState.sort(sortByDepthCompareFunction);
 		hitState.sort(sortByDepthCompareFunction);
-		frames.set (TagDefineButton.STATE_UP, upState);
-		frames.set (TagDefineButton.STATE_OVER, overState);
-		frames.set (TagDefineButton.STATE_DOWN, downState);
-		frames.set (TagDefineButton.STATE_HIT, hitState);
+		buttonFrames.set (TagDefineButton.STATE_UP, upState);
+		buttonFrames.set (TagDefineButton.STATE_OVER, overState);
+		buttonFrames.set (TagDefineButton.STATE_DOWN, downState);
+		buttonFrames.set (TagDefineButton.STATE_HIT, hitState);
 	}
 	
 	private function sortByDepthCompareFunction(a:SWFButtonRecord, b:SWFButtonRecord):Int {
@@ -126,7 +127,7 @@ class TagDefineButton2 implements IDefinitionTag
 		}
 	}
 	
-	public function toString(indent:Int = 0):String {
+	override public function toString(indent:Int = 0):String {
 		var str:String = Tag.toStringCommon(type, name, indent) +
 			"ID: " + characterId + ", TrackAsMenu: " + trackAsMenu;
 		var i:Int;

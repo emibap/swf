@@ -16,6 +16,7 @@ import format.swf.exporters.AS3GraphicsDataShapeExporter;
 import format.swf.exporters.ShapeCommandExporter;
 import format.swf.tags.TagDefineBits;
 import format.swf.tags.TagDefineBitsLossless;
+import format.swf.tags.TagDefineButton2;
 import format.swf.tags.TagDefineEditText;
 import format.swf.tags.TagDefineShape;
 import format.swf.tags.TagDefineSprite;
@@ -270,11 +271,6 @@ class MovieClip extends flash.display.MovieClip {
 	
 	private function enterFrame ():Void {
 		
-		trace(name);
-		if (this.name == "locoCuad") {
-			trace(name);
-		}
-		
 		if (lastUpdate == __currentFrame) {
 			
 			__currentFrame ++;
@@ -318,6 +314,10 @@ class MovieClip extends flash.display.MovieClip {
 			
 			removeChildAt (0);
 			
+		}
+		
+		for (j in activeObjects.keys()) {
+			activeObjects.remove(j);
 		}
 		
 		if (bounds.width > 0 && bounds.height > 0) {
@@ -479,7 +479,6 @@ class MovieClip extends flash.display.MovieClip {
 		var frame = data.frames[index];
 		
 		//if (frame.frameNumber == currentFrame - 1 || frame.tweenType == null || frame.tweenType == "") {
-		trace(activeObjects.keys());
 		for (object in frame.objects) {
 			
 			var displayObject:DisplayObject = null;
@@ -510,6 +509,10 @@ class MovieClip extends flash.display.MovieClip {
 				} else if (Std.is (symbol, TagDefineEditText)) {
 					
 					displayObject = createDynamicText (cast symbol);
+					
+				} else if (Std.is (symbol, TagDefineButton2)) {
+					
+					displayObject = new SimpleButton(cast symbol);
 					
 				}
 				
@@ -726,10 +729,6 @@ class MovieClip extends flash.display.MovieClip {
 	
 	private function update ():Void {
 		
-		if (this.name == "locoCuad") {
-			trace(name);
-		}
-		
 		if (__currentFrame != lastUpdate) {
 			
 			for (i in 0...numChildren) {
@@ -787,14 +786,14 @@ class MovieClip extends flash.display.MovieClip {
 		return __currentFrame;
 		
 	}
-	
+	#end
 	
 	@:getter public function get___totalFrames():Int {
 		
 		return __totalFrames;
 		
 	}
-	#end
+	
 	
 	
 	
