@@ -59,14 +59,10 @@ class MovieClip extends flash.display.MovieClip {
 			
 		}
 		
-		//currentFrame = 1;
 		__currentFrame = 1;
-		//__totalFrames = data.frames.length;
 		__totalFrames = data.frames.length;
 		
 		activeObjects = new Map();
-		
-		//trace("frames: " + __totalFrames);
 		
 		update ();
 		
